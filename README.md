@@ -1,8 +1,10 @@
 # BugScope
 
-A beginner-friendly Python tool for reconnaissance and safe vulnerability checks, built for learning bug bounty hunting.
+A Python bug bounty tool for reconnaissance and safe vulnerability checks — a beginner-friendly recon tool that finds subdomains, checks security headers, and scans for common exposed files.
 
 BugScope performs only safe, non-destructive checks. It reads public information and HTTP headers. It does not exploit vulnerabilities, brute-force logins, or change anything on the target.
+
+Use it to learn bug bounty hunting, web security reconnaissance, subdomain enumeration, and security headers analysis.
 
 ## Authorized use only
 
@@ -117,3 +119,7 @@ bugscope/
 ## Disclaimer
 
 This tool is for learning and authorized security testing only. The author is not responsible for misuse. Always follow the scope and rules of the bug bounty program or the written agreement with the client.
+
+## Keywords
+
+Python bug bounty tool, recon tool, reconnaissance tool, subdomain finder, subdomain enumeration, security headers checker, vulnerability scanner, web security tool, Kali Linux security tool, bug bounty for beginners, crt.sh subdomain search.
