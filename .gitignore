@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+bugscope-report.txt
+report.txt
+.venv/
+venv/
