@@ -75,9 +75,18 @@ def get_ip(domain):
 
 def get_subdomains(domain):
     """Find subdomains from crt.sh (public certificate transparency logs)."""
+    # localhost and IP addresses have no public certificates, so there
+    # is nothing to look up in crt.sh. Skip the lookup instead of waiting.
+    if domain == "localhost" or domain.endswith(".local"):
+        return []
+    try:
+        socket.inet_aton(domain)
+        return []
+    except OSError:
+        pass
     url = f"https://crt.sh/?q=%25.{domain}&output=json"
     try:
-        response = requests.get(url, timeout=15)
+        response = requests.get(url, timeout=15, headers={"User-Agent": "BugScope/1.1"})
         if response.status_code != 200:
             return []
         data = response.json()
@@ -161,16 +170,21 @@ def main():
         lines.append("IP: not found")
 
     # Step 2 - Subdomains
-    print("\n[2] Finding subdomains (crt.sh)...")
-    subs = get_subdomains(domain)
-    if subs:
-        print(f"    Found {len(subs)} subdomains:")
-        for sub in subs[:20]:
-            print(f"    - {sub}")
-        lines.append(f"Subdomains ({len(subs)}): {', '.join(subs)}")
+    if domain == "localhost":
+        print("\n[2] Skipping subdomain search: localhost has no public subdomains.")
+        lines.append("Subdomains: skipped for localhost")
     else:
-        print("    No subdomains found (or crt.sh did not respond).")
-        lines.append("Subdomains: none found")
+        print("\n[2] Finding subdomains (crt.sh)...")
+        subs = get_subdomains(domain)
+        if subs:
+            print(f"    Found {len(subs)} subdomains:")
+            for sub in subs[:20]:
+                print(f"    - {sub}")
+            lines.append(f"Subdomains ({len(subs)}): {', '.join(subs)}")
+        else:
+            print("    No subdomains found in the public certificate logs for this domain.")
+            print("    This is normal for small/test domains such as example.com.")
+            lines.append("Subdomains: none found in certificate logs")
 
     # Step 3 - Website and headers
     print(f"\n[3] Checking website: {base_url} ...")
